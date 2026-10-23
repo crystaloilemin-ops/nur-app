@@ -1,0 +1,13 @@
+
+{
+  "id": "./",
+  "name": "Нур — Путь поминания Аллаха",
+  "short_name": "Нур",
+  "description": "Азкары, дуа и компас киблы",
+  "lang": "ru",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f5ed",
+  "theme_color": "#174b38"
+}
