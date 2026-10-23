@@ -404,6 +404,11 @@ footer {
 <button class="menu-card" data-section="qibla">
   <span>🧭</span>
   <strong>Компас киблы</strong>
+  <button class="menu-card" data-section="prayer">
+  <span>🕌</span>
+  <strong>Время намаза</strong>
+  <small>Расписание для Перми</small>
+</button>
   <small>Направление на Каабу</small>
 </button>
 
@@ -588,7 +593,108 @@ function showAzkarCategories() {
   });
 }
 
+async function showPrayerTimes() {
+  content.replaceChildren();
 
+  const heading = document.createElement("h2");
+  heading.textContent = "🕌 Время намаза";
+  content.appendChild(heading);
+
+  const date = document.createElement("p");
+  date.textContent = "Город: Пермь";
+  content.appendChild(date);
+
+  const status = document.createElement("p");
+  status.textContent = "Загружаем расписание...";
+  content.appendChild(status);
+
+  const list = document.createElement("div");
+  content.appendChild(list);
+
+  const refreshButton = document.createElement("button");
+  refreshButton.textContent = "Обновить расписание";
+  refreshButton.className = "category-button";
+  content.appendChild(refreshButton);
+
+  async function loadTimes() {
+    status.textContent = "Загружаем расписание...";
+    list.replaceChildren();
+
+    const now = new Date();
+
+    const dateString = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Yekaterinburg",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric"
+    }).format(now);
+
+    try {
+      const url =
+        "https://api.aladhan.com/v1/timingsByCity/" +
+        dateString.replaceAll("/", "-") +
+        "?city=Perm&country=Russia&method=14" +
+        "&timezonestring=Asia/Yekaterinburg";
+
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error("Ошибка загрузки");
+      }
+
+      const result = await response.json();
+
+      if (result.code !== 200 || !result.data?.timings) {
+        throw new Error("Расписание недоступно");
+      }
+
+      const timings = result.data.timings;
+
+      const prayers = [
+        ["Фаджр", timings.Fajr],
+        ["Зухр", timings.Dhuhr],
+        ["Аср", timings.Asr],
+        ["Магриб", timings.Maghrib],
+        ["Иша", timings.Isha]
+      ];
+
+      status.textContent =
+        "Дата: " + result.data.date.readable;
+
+      prayers.forEach(function (prayer) {
+        const card = document.createElement("article");
+        card.className = "dhikr-card";
+
+        const name = document.createElement("strong");
+        name.textContent = prayer[0];
+
+        const time = document.createElement("p");
+        time.style.fontSize = "25px";
+        time.style.color = "#174b38";
+        time.style.marginBottom = "0";
+        time.textContent = prayer[1];
+
+        card.append(name, time);
+        list.appendChild(card);
+      });
+
+      const note = document.createElement("small");
+      note.textContent =
+        "Время рассчитано автоматически. Оно может отличаться " +
+        "от расписания местной мечети.";
+      list.appendChild(note);
+
+    } catch (error) {
+      status.textContent =
+        "Не удалось загрузить расписание. Проверь интернет и нажми «Обновить расписание».";
+    }
+  }
+
+  refreshButton.addEventListener("click", loadTimes);
+
+  await loadTimes();
+}
+    
 function showQibla() {
   content.replaceChildren();
 
@@ -755,6 +861,11 @@ document.querySelectorAll(".menu-card").forEach(function (button) {
   return;
 }
 
+if (button.dataset.section === "prayer") {
+  showPrayerTimes();
+  return;
+}
+    
     content.replaceChildren();
 
     const heading = document.createElement("h2");
