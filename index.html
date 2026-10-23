@@ -5,7 +5,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>JSFiddle q3r20ybz</title>
+  <title>Нур — Путь поминания Аллаха</title>
+<meta name="theme-color" content="#174b38">
+<link rel="manifest" href="./manifest.json">
 
   <style>
     
@@ -619,5 +621,12 @@ document.querySelectorAll(".menu-card").forEach(function (button) {
 });
 
   </script>
+  <script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./service-worker.js");
+  });
+}
+</script>
 </body>
 </html>
