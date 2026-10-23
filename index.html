@@ -404,12 +404,13 @@ footer {
 <button class="menu-card" data-section="qibla">
   <span>🧭</span>
   <strong>Компас киблы</strong>
-  <button class="menu-card" data-section="prayer">
+  <small>Направление на Каабу</small>
+</button>
+
+<button class="menu-card" data-section="prayer">
   <span>🕌</span>
   <strong>Время намаза</strong>
   <small>Расписание для Перми</small>
-</button>
-  <small>Направление на Каабу</small>
 </button>
 
 </section>
@@ -518,9 +519,14 @@ const sections = {
   },
 
   qibla: {
-    title: "Компас киблы",
-    items: []
-  }
+  title: "Компас киблы",
+  items: []
+},
+
+prayer: {
+  title: "Время намаза",
+  items: []
+}
 };
 
 // Показываем карточки
