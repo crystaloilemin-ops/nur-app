@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html>
+
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JSFiddle q3r20ybz</title>
+
+  <style>
+    
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f4f5ed;
+  color: #23392f;
+  font-family: Arial, sans-serif;
+}
+
+.app {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px;
+}
+header {
+  text-align: center;
+  padding: 25px 10px;
+  background: #174b38;
+  color: white;
+  border-radius: 20px;
+}
+
+.logo {
+  font-size: 38px;
+  color: #e5ce91;
+}
+
+header h1 {
+  margin: 8px 0;
+  font-size: 32px;
+}
+
+header p {
+  margin-bottom: 0;
+}
+
+.welcome {
+  margin: 22px 0;
+  padding: 20px;
+  background: #e6eddf;
+  border-radius: 16px;
+}
+
+.welcome p:first-child {
+  font-size: 25px;
+  color: #174b38;
+}
+
+h2 {
+  font-size: 20px;
+}
+
+.counter {
+  padding: 22px;
+  text-align: center;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 3px 12px #00000008;
+}
+
+#count {
+  margin: 15px;
+  font-size: 48px;
+  color: #174b38;
+}
+
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 13px 17px;
+  margin: 5px;
+  background: #174b38;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.85;
+}
+
+.secondary {
+  background: #e6eddf;
+  color: #174b38;
+}
+
+.menu {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.menu-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  min-height: 125px;
+  margin: 0;
+  padding: 15px 5px;
+  background: white;
+  color: #174b38;
+  border: 1px solid #dce5d9;
+}
+
+.menu-card span {
+  font-size: 25px;
+  color: #b18b42;
+}
+
+.menu-card small {
+  font-size: 11px;
+}
+
+.content {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin-top: 20px;
+  padding: 20px;
+  min-height: 70px;
+  background: white;
+  border-radius: 14px;
+}
+
+footer {
+  margin: 25px 0 10px;
+  text-align: center;
+  font-size: 13px;
+  color: #68786e;
+}
+
+@media (max-width: 480px) {
+  .app {
+    padding: 12px;
+  }
+
+  .menu {
+    grid-template-columns: 1fr;
+  }
+
+  .menu-card {
+    min-height: 95px;
+  }
+}
+
+
+.dhikr-card {
+  padding: 18px;
+  margin: 14px 0;
+  border: 1px solid #dce5d9;
+  border-radius: 14px;
+  background: #fbfcf8;
+}
+
+.arabic {
+  font-size: 25px;
+  line-height: 2;
+  text-align: right;
+  color: #174b38;
+}
+
+.dhikr-card small {
+  display: block;
+  margin-top: 12px;
+  line-height: 1.6;
+  color: #68786e;
+}
+
+
+.category-button {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 17px;
+  text-align: right;
+  background: #e6eddf;
+  color: #174b38;
+  border: 1px solid #dce5d9;
+  font-size: 17px;
+}
+
+.category-button:hover {
+  background: #d5e4d0;
+}
+
+  </style>
+
+  
+</head>
+<body>
+  
+<div class="app">
+  <header>
+    <div class="logo">نُور</div>
+    <h1>Нур</h1>
+    <p>Путь поминания Аллаха</p>
+  </header>
+
+  <main>
+    <section class="welcome">
+      <p>السلام عليكم</p>
+      <h2>Ассаляму алейкум!</h2>
+      <p>Пусть день будет наполнен благом.</p>
+    </section>
+
+    <h2>Мой зикр</h2>
+
+    <section class="counter">
+      <p>Количество повторений</p>
+      <div id="count">0</div>
+      <button id="countButton">СубханАллах</button>
+      <button id="resetButton" class="secondary">
+        Сбросить счётчик
+      </button>
+    </section>
+
+    <h2>Разделы</h2>
+
+    <section class="menu">
+      <button class="menu-card" data-section="azkar">
+        <span>أذكار</span>
+        <strong>Азкары</strong>
+        <small>Поминание Аллаха</small>
+      </button>
+
+      <button class="menu-card" data-section="dua">
+        <span>دعاء</span>
+        <strong>Дуа</strong>
+        <small>Мольбы</small>
+      </button>
+
+
+<button class="menu-card" data-section="qibla">
+  <span>🧭</span>
+  <strong>Компас киблы</strong>
+  <small>Направление на Каабу</small>
+</button>
+
+</section>
+
+<section id="content" class="content">
+      Выбери раздел, чтобы продолжить.
+    </section>
+  </main>
+
+  <footer>
+    Создано с намерением приносить пользу
+  </footer>
+</div>
+
+
+  <script>
+    
+let count = 0;
+
+const countDisplay = document.getElementById("count");
+const countButton = document.getElementById("countButton");
+const resetButton = document.getElementById("resetButton");
+const content = document.getElementById("content");
+
+// Счётчик зикра
+countButton.addEventListener("click", function () {
+  count++;
+  countDisplay.textContent = count;
+});
+
+resetButton.addEventListener("click", function () {
+  count = 0;
+  countDisplay.textContent = count;
+});
+
+// Данные приложения
+const sections = {
+  azkar: {
+    title: "Азкары",
+    categories: {
+      morning: {
+        title: "Утренние азкары",
+        items: [
+          {
+            arabic: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
+            translation: "С именем Аллаха, с именем Которого ничто не причинит вреда ни на земле, ни на небесах. Он — Всеслышащий, Всезнающий.",
+            count: 3,
+            source: "Сунан Абу Дауд, 5088; Хисн аль-Муслим, 86."
+          },
+          {
+            arabic: "رَضِيتُ بِاللَّهِ رَبًّا وَبِالْإِسْلَامِ دِينًا وَبِمُحَمَّدٍ نَبِيًّا",
+            translation: "Я доволен Аллахом как Господом, исламом как религией и Мухаммадом ﷺ как пророком.",
+            count: 3,
+            source: "Хисн аль-Муслим, 87."
+          }
+        ]
+      },
+
+      evening: {
+        title: "Вечерние азкары",
+        items: [
+          {
+            arabic: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
+            translation: "С именем Аллаха, с именем Которого ничто не причинит вреда ни на земле, ни на небесах. Он — Всеслышащий, Всезнающий.",
+            count: 3,
+            source: "Сунан Абу Дауд, 5088; Хисн аль-Муслим, 86."
+          },
+          {
+            arabic: "رَضِيتُ بِاللَّهِ رَبًّا وَبِالْإِسْلَامِ دِينًا وَبِمُحَمَّدٍ نَبِيًّا",
+            translation: "Я доволен Аллахом как Господом, исламом как религией и Мухаммадом ﷺ как пророком.",
+            count: 3,
+            source: "Хисн аль-Муслим, 87."
+          }
+        ]
+      }
+    }
+  },
+
+  dua: {
+    title: "Дуа",
+    items: [
+      {
+        arabic: "رَبِّ زِدْنِي عِلْمًا",
+        translation: "Господи, прибавь мне знания!",
+        count: 1,
+        source: "Коран, сура «Та Ха», 20:114."
+      },
+      {
+        arabic: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",
+        translation: "Господь наш! Даруй нам добро в этом мире и добро в Последней жизни и защити нас от наказания Огня.",
+        count: 1,
+        source: "Коран, сура «Аль-Бакара», 2:201."
+      },
+      {
+        arabic: "رَبَّنَا ظَلَمْنَا أَنْفُسَنَا وَإِنْ لَمْ تَغْفِرْ لَنَا وَتَرْحَمْنَا لَنَكُونَنَّ مِنَ الْخَاسِرِينَ",
+        translation: "Господь наш! Мы поступили несправедливо по отношению к себе. Если Ты не простишь нас и не помилуешь нас, мы окажемся среди потерпевших убыток.",
+        count: 1,
+        source: "Коран, сура «Аль-Араф», 7:23."
+      }
+    ]
+  },
+
+    favorite: {
+    title: "Скоро появится",
+    items: []
+  },
+
+  qibla: {
+    title: "Компас киблы",
+    items: []
+  }
+};
+
+// Показываем карточки
+function showItems(title, items, showBackButton) {
+  content.replaceChildren();
+
+  const heading = document.createElement("h2");
+  heading.textContent = title;
+  content.appendChild(heading);
+
+  if (showBackButton) {
+    const backButton = document.createElement("button");
+    backButton.className = "category-button";
+    backButton.textContent = "← Назад к азкарам";
+
+    backButton.addEventListener("click", function () {
+      showAzkarCategories();
+    });
+
+    content.appendChild(backButton);
+  }
+
+  items.forEach(function (item) {
+    const card = document.createElement("article");
+    card.className = "dhikr-card";
+
+    const arabic = document.createElement("p");
+    arabic.className = "arabic";
+    arabic.lang = "ar";
+    arabic.dir = "rtl";
+    arabic.textContent = item.arabic;
+
+    const translation = document.createElement("p");
+    translation.textContent = item.translation;
+
+    const repetitions = document.createElement("p");
+    repetitions.textContent =
+      "Количество повторений: " + item.count;
+
+    const source = document.createElement("small");
+    source.textContent = "Источник: " + item.source;
+
+    card.append(arabic, translation, repetitions, source);
+    content.appendChild(card);
+  });
+}
+
+// Показываем утренние и вечерние азкары
+function showAzkarCategories() {
+  const section = sections.azkar;
+
+  content.replaceChildren();
+
+  const heading = document.createElement("h2");
+  heading.textContent = section.title;
+  content.appendChild(heading);
+
+  Object.keys(section.categories).forEach(function (key) {
+    const category = section.categories[key];
+
+    const categoryButton = document.createElement("button");
+    categoryButton.className = "category-button";
+    categoryButton.textContent = category.title;
+
+    categoryButton.addEventListener("click", function () {
+      showItems(category.title, category.items, true);
+    });
+
+    content.appendChild(categoryButton);
+  });
+}
+
+
+function showQibla() {
+  content.replaceChildren();
+
+  const heading = document.createElement("h2");
+  heading.textContent = "Компас киблы";
+  content.appendChild(heading);
+
+  const info = document.createElement("p");
+  info.textContent =
+    "Разреши доступ к местоположению, чтобы рассчитать направление на Каабу.";
+  content.appendChild(info);
+
+  const direction = document.createElement("p");
+  direction.textContent = "Направление: рассчитывается после определения местоположения";
+  content.appendChild(direction);
+
+  const compass = document.createElement("div");
+  compass.textContent = "🧭";
+  compass.style.fontSize = "90px";
+  compass.style.textAlign = "center";
+  compass.style.margin = "20px";
+  content.appendChild(compass);
+
+  const arrow = document.createElement("div");
+  arrow.textContent = "⬆️";
+  arrow.style.fontSize = "55px";
+  arrow.style.textAlign = "center";
+  arrow.style.transformOrigin = "center";
+  content.appendChild(arrow);
+
+  const status = document.createElement("p");
+  status.textContent = "Ожидание разрешения на местоположение...";
+  content.appendChild(status);
+
+  const button = document.createElement("button");
+  button.className = "category-button";
+  button.textContent = "Определить направление";
+  content.appendChild(button);
+
+  let bearing = null;
+  let headingValue = null;
+
+  function updateArrow() {
+    if (bearing === null) return;
+
+    direction.textContent =
+      "Направление на Каабу: " + Math.round(bearing) + "° от севера";
+
+    if (headingValue !== null) {
+      arrow.style.transform =
+        "rotate(" + (bearing - headingValue) + "deg)";
+      status.textContent = "Компас активен.";
+    } else {
+      arrow.style.transform = "rotate(" + bearing + "deg)";
+      status.textContent =
+        "Угол рассчитан от севера. Датчик компаса пока недоступен.";
+    }
+  }
+
+  function onOrientation(event) {
+    if (typeof event.webkitCompassHeading === "number") {
+      headingValue = event.webkitCompassHeading;
+    } else if (event.absolute && event.alpha !== null) {
+      headingValue = (360 - event.alpha) % 360;
+    } else {
+      return;
+    }
+
+    updateArrow();
+  }
+
+  button.addEventListener("click", function () {
+    if (!navigator.geolocation) {
+      status.textContent =
+        "Этот браузер не поддерживает определение местоположения.";
+      return;
+    }
+
+    status.textContent = "Запрашиваем местоположение...";
+
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        const lat = position.coords.latitude * Math.PI / 180;
+        const lon = position.coords.longitude * Math.PI / 180;
+
+        const kaabaLat = 21.4225 * Math.PI / 180;
+        const kaabaLon = 39.8262 * Math.PI / 180;
+
+        const deltaLon = kaabaLon - lon;
+
+        const y = Math.sin(deltaLon) * Math.cos(kaabaLat);
+        const x =
+          Math.cos(lat) * Math.sin(kaabaLat) -
+          Math.sin(lat) * Math.cos(kaabaLat) * Math.cos(deltaLon);
+
+        bearing =
+          (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+
+        updateArrow();
+
+        if (headingValue === null) {
+          status.textContent =
+            "Направление рассчитано. Проверяем доступность компаса...";
+        }
+
+        if (typeof DeviceOrientationEvent !== "undefined" &&
+            typeof DeviceOrientationEvent.requestPermission === "function") {
+          DeviceOrientationEvent.requestPermission()
+            .then(function (permission) {
+              if (permission === "granted") {
+                window.addEventListener(
+                  "deviceorientation",
+                  onOrientation
+                );
+              } else {
+                status.textContent =
+                  "Направление рассчитано, но доступ к компасу не разрешён.";
+              }
+            })
+            .catch(function () {
+              status.textContent =
+                "Не удалось включить компас. Угол направления рассчитан.";
+            });
+        } else {
+          window.addEventListener(
+            "deviceorientationabsolute",
+            onOrientation
+          );
+          window.addEventListener(
+            "deviceorientation",
+            onOrientation
+          );
+        }
+      },
+      function () {
+        status.textContent =
+          "Не удалось получить местоположение. Разреши доступ в браузере и попробуй снова.";
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 15000
+      }
+    );
+  });
+}
+
+
+// Обработчик главных кнопок — только один
+document.querySelectorAll(".menu-card").forEach(function (button) {
+  button.addEventListener("click", function () {
+    const section = sections[button.dataset.section];
+
+    if (!section) {
+      return;
+    }
+
+    if (section.categories) {
+      showAzkarCategories();
+      return;
+    }
+
+    if (button.dataset.section === "qibla") {
+  showQibla();
+  return;
+}
+
+    content.replaceChildren();
+
+    const heading = document.createElement("h2");
+    heading.textContent = section.title;
+    content.appendChild(heading);
+
+    if (!section.items || section.items.length === 0) {
+      const message = document.createElement("p");
+      message.textContent =
+        "Этот раздел появится в будущих обновлениях.";
+      content.appendChild(message);
+      return;
+    }
+
+    showItems(section.title, section.items, false);
+  });
+});
+
+  </script>
+</body>
+</html>
