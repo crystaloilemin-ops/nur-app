@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "nur-app-v1";
+const CACHE_NAME = "nur-app-v2";
 
 const FILES_TO_CACHE = [
   "./",
@@ -34,6 +34,23 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
 
+  // Страницы: сначала сеть, кэш — только офлайн
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      fetch(event.request).then((response) => {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, copy);
+        });
+        return response;
+      }).catch(() => {
+        return caches.match("./index.html");
+      })
+    );
+    return;
+  }
+
+  // Остальное (иконки и прочее): сначала кэш — это норм для офлайна
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) return cachedResponse;
@@ -41,19 +58,11 @@ self.addEventListener("fetch", (event) => {
       return fetch(event.request).then((response) => {
         if (response.ok) {
           const copy = response.clone();
-
           caches.open(CACHE_NAME).then((cache) => {
             cache.put(event.request, copy);
           });
         }
-
         return response;
-      }).catch(() => {
-        if (event.request.mode === "navigate") {
-          return caches.match("./index.html");
-        }
-
-        return Response.error();
       });
     })
   );
