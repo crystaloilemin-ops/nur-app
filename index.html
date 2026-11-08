@@ -622,6 +622,96 @@ footer {
     transition-duration: 0.01ms !important;
   }
 }
+
+.name-day {
+  margin: 24px 0;
+  padding: 28px 20px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(216, 183, 108, 0.22), transparent 60%),
+    linear-gradient(135deg, #174b38, #205b43);
+  color: white;
+  border: 1px solid rgba(216, 183, 108, 0.45);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  animation: nurFadeIn 0.7s ease 0.15s both;
+}
+
+.name-day .name-arabic {
+  font-size: clamp(34px, 7vw, 46px);
+  line-height: 1.6;
+  color: var(--gold-light);
+  text-shadow: 0 0 28px rgba(241, 223, 170, 0.35);
+  animation: nurBreath 4s ease-in-out infinite;
+}
+
+@keyframes nurBreath {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.name-day .name-transcription {
+  margin: 10px 0 4px;
+  font-style: italic;
+  color: var(--gold-light);
+}
+
+.name-day .name-meaning {
+  color: #e6eadf;
+}
+
+.name-day small {
+  display: block;
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.name-day button {
+  margin-top: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(216, 183, 108, 0.5);
+}
+
+.name-day button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.names-list-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.names-list-grid .name-item {
+  padding: 14px 10px;
+  text-align: center;
+  background: #fbfcf8;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.names-list-grid .name-item p {
+  margin: 4px 0;
+}
+
+.names-list-grid .name-item .name-arabic {
+  font-size: 24px;
+  color: var(--green);
+}
+
+@media (max-width: 650px) {
+  .names-list-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .name-day .name-arabic {
+    animation: none;
+  }
+}
+
+  
 </style>
 
 </head>
@@ -641,6 +731,9 @@ footer {
       <p>Пусть день будет наполнен благом.</p>
     </section>
 
+    <section class="name-day" id="nameDay" aria-label="Имя Аллаха дня"></section>
+
+    
     <h2>Мой зикр</h2>
 
     <section class="counter">
@@ -1727,6 +1820,184 @@ document.querySelectorAll(".menu-card").forEach(function (button) {
     showItems(section.title, section.items, false);
   });
 });
+
+// 99 прекрасных имён Аллаха
+const beautifulNames = [
+  ["الرَّحْمَنُ", "Ар-Рахман", "Милостивый"],
+  ["الرَّحِيمُ", "Ар-Рахим", "Милосердный"],
+  ["الْمَلِكُ", "Аль-Малик", "Царь, Владыка"],
+  ["الْقُدُّوسُ", "Аль-Куддус", "Святой"],
+  ["السَّلَامُ", "Ас-Салям", "Дарующий мир"],
+  ["الْمُؤْمِنُ", "Аль-Му'мин", "Дарующий безопасность"],
+  ["الْمُهَيْمِنُ", "Аль-Мухаймин", "Хранитель"],
+  ["الْعَزِيزُ", "Аль-'Азиз", "Могущественный"],
+  ["الْجَبَّارُ", "Аль-Джаббар", "Властвующий над всем"],
+  ["الْمُتَكَبِّرُ", "Аль-Мутакаббир", "Обладающий величием"],
+  ["الْخَالِقُ", "Аль-Халик", "Создатель"],
+  ["الْبَارِئُ", "Аль-Бари", "Творец"],
+  ["الْمُصَوِّرُ", "Аль-Мусаввир", "Дающий формы"],
+  ["الْغَفَّارُ", "Аль-Гаффар", "Многопрощающий"],
+  ["الْقَهَّارُ", "Аль-Каххар", "Подчиняющий Себе всё"],
+  ["الْوَهَّابُ", "Аль-Ваххаб", "Дарующий щедро"],
+  ["الرَّزَّاقُ", "Ар-Раззак", "Дарующий удел"],
+  ["الْفَتَّاحُ", "Аль-Фаттах", "Открывающий"],
+  ["الْعَلِيمُ", "Аль-'Алим", "Всезнающий"],
+  ["الْقَابِضُ", "Аль-Кабид", "Сжимающий"],
+  ["الْبَاسِطُ", "Аль-Басит", "Расширяющий"],
+  ["الْخَافِضُ", "Аль-Хафид", "Умаляющий"],
+  ["الرَّافِعُ", "Ар-Рафи'", "Возвышающий"],
+  ["الْمُعِزُّ", "Аль-Му'изз", "Дарующий могущество"],
+  ["الْمُذِلُّ", "Аль-Музилль", "Уничижающий"],
+  ["السَّمِيعُ", "Ас-Сами'", "Всеслышащий"],
+  ["الْبَصِيرُ", "Аль-Басыр", "Всевидящий"],
+  ["الْحَكَمُ", "Аль-Хакам", "Судья"],
+  ["الْعَدْلُ", "Аль-'Адль", "Справедливый"],
+  ["اللَّطِيفُ", "Аль-Латыф", "Мягкий, Скрытый"],
+  ["الْخَبِيرُ", "Аль-Хабыр", "Сведущий"],
+  ["الْحَلِيمُ", "Аль-Халим", "Кроткий"],
+  ["الْعَظِيمُ", "Аль-'Азым", "Великий"],
+  ["الْغَفُورُ", "Аль-Гафур", "Прощающий"],
+  ["الشَّكُورُ", "Аш-Шакур", "Воздающий за благодарность"],
+  ["الْعَلِيُّ", "Аль-'Али", "Всевышний"],
+  ["الْكَبِيرُ", "Аль-Кабыр", "Величайший"],
+  ["الْحَفِيظُ", "Аль-Хафиз", "Охраняющий"],
+  ["الْمُقِيتُ", "Аль-Мукыт", "Кормящий"],
+  ["الْحَسِيبُ", "Аль-Хасыб", "Дающий расчёт"],
+  ["الْجَلِيلُ", "Аль-Джалиль", "Величественный"],
+  ["الْكَرِيمُ", "Аль-Карым", "Щедрый"],
+  ["الرَّقِيبُ", "Ар-Ракыб", "Наблюдающий"],
+  ["الْمُجِيبُ", "Аль-Муджиб", "Отвечающий на мольбы"],
+  ["الْوَاسِعُ", "Аль-Васи'", "Объемлющий"],
+  ["الْحَكِيمُ", "Аль-Хакым", "Мудрый"],
+  ["الْوَدُودُ", "Аль-Вадуд", "Любящий"],
+  ["الْمَجِيدُ", "Аль-Маджид", "Славный"],
+  ["الْبَاعِثُ", "Аль-Ба'ис", "Воскрешающий"],
+  ["الشَّهِيدُ", "Аш-Шахыд", "Свидетельствующий"],
+  ["الْحَقُّ", "Аль-Хакк", "Истинный"],
+  ["الْوَكِيلُ", "Аль-Вакыль", "Попечитель"],
+  ["الْقَوِيُّ", "Аль-Кавий", "Всесильный"],
+  ["الْمَتِينُ", "Аль-Матын", "Крепкий"],
+  ["الْوَلِيُّ", "Аль-Валий", "Покровитель"],
+  ["الْحَمِيدُ", "Аль-Хамыд", "Достойный хвалы"],
+  ["الْمُحْصِي", "Аль-Мухсы", "Считающий"],
+  ["الْمُبْدِئُ", "Аль-Мубди'", "Приступающий к созданию"],
+  ["الْمُعِيدُ", "Аль-Му'ыд", "Возвращающий"],
+  ["الْمُحْيِي", "Аль-Мухый", "Оживляющий"],
+  ["الْمُمِيتُ", "Аль-Мумыт", "Умерщвляющий"],
+  ["الْحَيُّ", "Аль-Хайю", "Живой"],
+  ["الْقَيُّومُ", "Аль-Кайюм", "Вседержитель"],
+  ["الْوَاجِدُ", "Аль-Ваджид", "Обнаруживающий"],
+  ["الْمَاجِدُ", "Аль-Маджыд", "Благородный"],
+  ["الْوَاحِدُ", "Аль-Вахыд", "Единый"],
+  ["الْأَحَدُ", "Аль-Ахад", "Единственный"],
+  ["الصَّمَدُ", "Ас-Самад", "Самодостаточный"],
+  ["الْقَادِرُ", "Аль-Кадир", "Всемогущий"],
+  ["الْمُقْتَدِرُ", "Аль-Муктадир", "Обладающий полной силой"],
+  ["الْمُقَدِّمُ", "Аль-Мукаддим", "Продвигающий вперёд"],
+  ["الْمُؤَخِّرُ", "Аль-Му'аххир", "Отдаляющий"],
+  ["الْأَوَّلُ", "Аль-Авваль", "Первый"],
+  ["الْآخِرُ", "Аль-Ахыр", "Последний"],
+  ["الظَّاهِرُ", "Аз-Захыр", "Явный"],
+  ["الْبَاطِنُ", "Аль-Батын", "Скрытый"],
+  ["الْوَالِي", "Аль-Вали", "Правитель"],
+  ["الْمُتَعَالِي", "Аль-Мута'али", "Возвышающийся"],
+  ["الْبَرُّ", "Аль-Барр", "Творящий добро"],
+  ["التَّوَّابُ", "Ат-Таувваб", "Принимающий покаяние"],
+  ["الْمُنْتَقِمُ", "Аль-Мунтакым", "Воздающий за несправедливость"],
+  ["الْعَفُوُّ", "Аль-'Афувв", "Стирающий грехи"],
+  ["الرَّؤُوفُ", "Ар-Рауф", "Сострадательный"],
+  ["مَالِكُ الْمُلْكِ", "Маликуль-мульк", "Владыка владычества"],
+  ["ذُو الْجَلَالِ وَالْإِكْرَامِ", "Зуль-Джалили валь-Икрам", "Обладающий величием и щедростью"],
+  ["الْمُقْسِطُ", "Аль-Муксыт", "Справедливый в решении"],
+  ["الْجَامِعُ", "Аль-Джами'", "Собирающий"],
+  ["الْغَنِيُّ", "Аль-Ганий", "Богатый, Независимый"],
+  ["الْمُغْنِي", "Аль-Мугни", "Обогащающий"],
+  ["الْمَانِعُ", "Аль-Мани'", "Удерживающий"],
+  ["الضَّارُّ", "Ад-Дарр", "Приносящий испытания по Своей мудрости"],
+  ["النَّافِعُ", "Ан-Нафи'", "Приносящий пользу"],
+  ["النُّورُ", "Ан-Нур", "Свет"],
+  ["الْهَادِي", "Аль-Хади", "Наставляющий"],
+  ["الْبَدِيعُ", "Аль-Бади'", "Создающий без образца"],
+  ["الْبَاقِي", "Аль-Баки", "Вечный"],
+  ["الْوَارِثُ", "Аль-Варис", "Наследник"],
+  ["الرَّشِيدُ", "Ар-Рашид", "Направляющий на верный путь"],
+  ["الصَّبُورُ", "Ас-Сабур", "Терпеливый"]
+];
+
+// Имя дня: по номеру дня в году
+function renderNameOfDay() {
+  const now = new Date();
+  const startOfYear = new Date(now.getFullYear(), 0, 0);
+  const dayOfYear = Math.floor((now - startOfYear) / 86400000);
+  const [arabic, transcription, meaning] =
+    beautifulNames[dayOfYear % beautifulNames.length];
+
+  const block = document.getElementById("nameDay");
+  block.replaceChildren();
+
+  const arabicEl = document.createElement("p");
+  arabicEl.className = "name-arabic";
+  arabicEl.lang = "ar";
+  arabicEl.dir = "rtl";
+  arabicEl.textContent = arabic;
+
+  const transcriptionEl = document.createElement("p");
+  transcriptionEl.className = "name-transcription";
+  transcriptionEl.textContent = transcription;
+
+  const meaningEl = document.createElement("p");
+  meaningEl.className = "name-meaning";
+  meaningEl.textContent = meaning;
+
+  const note = document.createElement("small");
+  note.textContent = "Имя дня из 99 прекрасных имён Аллаха";
+
+  const allButton = document.createElement("button");
+  allButton.type = "button";
+  allButton.textContent = "Показать все 99 имён";
+  allButton.addEventListener("click", showAllNames);
+
+  block.append(arabicEl, transcriptionEl, meaningEl, note, allButton);
+}
+
+// Полный список имён — в тёмном режиме чтения
+function showAllNames() {
+  readingContent.replaceChildren();
+
+  const title = document.createElement("h2");
+  title.textContent = "99 прекрасных имён Аллаха";
+  readingContent.appendChild(title);
+
+  const grid = document.createElement("div");
+  grid.className = "names-list-grid";
+
+  beautifulNames.forEach(function (name) {
+    const item = document.createElement("div");
+    item.className = "name-item";
+
+    const arabicEl = document.createElement("p");
+    arabicEl.className = "name-arabic";
+    arabicEl.lang = "ar";
+    arabicEl.dir = "rtl";
+    arabicEl.textContent = name[0];
+
+    const transcriptionEl = document.createElement("p");
+    transcriptionEl.textContent = name[1];
+
+    const meaningEl = document.createElement("p");
+    meaningEl.textContent = name[2];
+
+    item.append(arabicEl, transcriptionEl, meaningEl);
+    grid.appendChild(item);
+  });
+
+  readingContent.appendChild(grid);
+  readingMode.classList.add("active");
+}
+
+renderNameOfDay();
+
+  
 </script>
 
 <script>
