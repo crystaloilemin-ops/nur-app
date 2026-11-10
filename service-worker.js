@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "nur-app-v12";
+const CACHE_NAME = "nur-app-v13";
 
 const FILES_TO_CACHE = [
   "./",
