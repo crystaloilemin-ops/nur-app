@@ -877,6 +877,11 @@ footer {
   display: none;
 }
 
+#greeting {
+  margin: 4px 0 0;
+  color: #e6eadf;
+}
+
   
 </style>
 
@@ -887,7 +892,8 @@ footer {
   <header>
     <div class="logo">نُور</div>
     <h1>Нур</h1>
-    <p>Путь поминания Аллаха</p>
+        <p id="greeting">Путь поминания Аллаха</p>
+
   </header>
 
   <main>
@@ -1002,6 +1008,27 @@ footer {
 <script>
 
 const content = document.getElementById("content");
+  // ===== Приветствие по времени =====
+function updateGreeting() {
+  const greetingEl = document.getElementById("greeting");
+  if (!greetingEl) return;
+
+  const hour = new Date().getHours();
+
+  if (hour >= 5 && hour < 12) {
+    greetingEl.textContent = "Ассаляму Алейкум Пусть день будет наполнен баракатом.";
+  } else if (hour >= 12 && hour < 17) {
+    greetingEl.textContent = "Ассаляму Алейкум Пусть Аллах облегчит твои дела.";
+  } else if (hour >= 17 && hour < 22) {
+    greetingEl.textContent = "Ассаляму Алейкум Пусть вечер будет спокойным и благодатным.";
+  } else {
+    greetingEl.textContent = "Ассаляму Алейкум Пусть ночь будет тихой и благословенной.";
+  }
+}
+
+updateGreeting();
+setInterval(updateGreeting, 60 * 60 * 1000);
+
 // ===== Тасбих: два режима =====
 const tasbihList = [
   { name: "СубханАллах", arabic: "سُبْحَانَ اللَّهِ", key: "subhanallah" },
