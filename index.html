@@ -819,6 +819,64 @@ footer {
   line-height: 1;
 }
 
+/* ===== Доработки тасбиха ===== */
+#count {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(216, 183, 108, 0.45);
+  transform: scale(0);
+  animation: rippleAnim 0.6s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes rippleAnim {
+  to {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+.circle-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 6px 0 2px;
+}
+
+.circle-dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--green-light);
+  border: 1px solid #c9d5c3;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.circle-dots span.done {
+  background: var(--gold);
+  border-color: var(--gold);
+}
+
+.circle-dots span.current {
+  background: var(--green);
+  border-color: var(--green);
+  transform: scale(1.25);
+}
+
+.free-goal {
+  background: var(--green-light);
+  color: var(--green);
+  border: 1px solid #dce5d9;
+  font-size: 14px;
+  padding: 9px 14px;
+  display: none;
+}
+
   
 </style>
 
@@ -851,6 +909,10 @@ footer {
       </div>
 
       <p class="dhikr-current" id="modeLabel">Зикр 1 из 3</p>
+                <div class="circle-dots" id="circleDots">
+        <span></span><span></span><span></span>
+      </div>
+
       <p class="dhikr-arabic" id="dhikrArabic">سُبْحَانَ اللَّهِ</p>
 
       <div id="count" role="button" tabindex="0" aria-label="Посчитать зикр">0</div>
@@ -859,6 +921,8 @@ footer {
         <div class="goal-fill" id="goalFill"></div>
       </div>
       <p class="goal-label" id="goalLabel">До следующего зикра: 33</p>
+                <button id="freeGoal" class="free-goal">Цель: без цели</button>
+
 
       <div class="counter-controls">
         <button id="resetButton" class="secondary">Сбросить счёт</button>
@@ -949,10 +1013,13 @@ const tasbihList = [
 
 const classicOrder = [0, 1, 2];
 const classicTarget = 33;
+const freeGoals = [0, 100, 500, 1000];
 
 let mode = localStorage.getItem("nur-tasbih-mode") || "classic";
 let classicPos = parseInt(localStorage.getItem("nur-tasbih-classicPos"), 10) || 0;
 let freeIndex = parseInt(localStorage.getItem("nur-tasbih-freeIndex"), 10) || 0;
+let freeGoalIndex = parseInt(localStorage.getItem("nur-tasbih-freeGoalIndex"), 10) || 0;
+if (freeGoalIndex >= freeGoals.length) freeGoalIndex = 0;
 
 const countDisplay = document.getElementById("count");
 const resetButton = document.getElementById("resetButton");
@@ -964,6 +1031,8 @@ const goalLabel = document.getElementById("goalLabel");
 const modeClassicBtn = document.getElementById("modeClassic");
 const modeFreeBtn = document.getElementById("modeFree");
 const refreshCounter = document.getElementById("refreshCounter");
+const circleDots = document.getElementById("circleDots");
+const freeGoal = document.getElementById("freeGoal");
 
 function loadNumber(key, fallback) {
   const value = parseInt(localStorage.getItem("nur-tasbih-" + key), 10);
@@ -984,6 +1053,19 @@ function currentDhikr() {
     : tasbihList[freeIndex];
 }
 
+function renderDots() {
+  if (mode !== "classic") {
+    circleDots.style.display = "none";
+    return;
+  }
+
+  circleDots.style.display = "flex";
+  circleDots.querySelectorAll("span").forEach(function (dot, index) {
+    dot.classList.toggle("done", index < classicPos);
+    dot.classList.toggle("current", index === classicPos);
+  });
+}
+
 function renderCounter() {
   const dhikr = currentDhikr();
   const progress = loadNumber(dhikr.key, 0);
@@ -995,6 +1077,7 @@ function renderCounter() {
   countDisplay.textContent = progress;
 
   if (mode === "classic") {
+    freeGoal.style.display = "none";
     modeLabel.textContent = "Зикр " + (classicPos + 1) + " из 3";
     const percent = Math.min(100, (progress / classicTarget) * 100);
     goalFill.style.width = percent + "%";
@@ -1003,17 +1086,39 @@ function renderCounter() {
         ? "Готово — переходи к следующему"
         : "Осталось " + (classicTarget - progress) + " из " + classicTarget;
   } else {
+    freeGoal.style.display = "inline-block";
     modeLabel.textContent = "Свободный счёт";
-    goalFill.style.width = progress > 0 ? "100%" : "0%";
-    goalLabel.textContent = progress + " повторений";
+    const goal = freeGoals[freeGoalIndex];
+
+    if (goal > 0) {
+      const percent = Math.min(100, (progress / goal) * 100);
+      goalFill.style.width = percent + "%";
+      goalLabel.textContent =
+        progress >= goal
+          ? "Цель достигнута! Можно продолжать 🎉"
+          : "Осталось " + (goal - progress) + " из " + goal;
+    } else {
+      goalFill.style.width = "0%";
+      goalLabel.textContent = progress + " повторений";
+    }
+
+    freeGoal.textContent = "Цель: " + (goal > 0 ? goal : "без цели");
   }
 
   modeClassicBtn.classList.toggle("active", mode === "classic");
   modeFreeBtn.classList.toggle("active", mode === "free");
+  renderDots();
 
   saveNumber("mode", mode);
   saveNumber("classicPos", classicPos);
   saveNumber("freeIndex", freeIndex);
+}
+
+function flashGold() {
+  countDisplay.style.color = "var(--gold)";
+  setTimeout(function () {
+    countDisplay.style.color = "";
+  }, 900);
 }
 
 function bump() {
@@ -1026,7 +1131,29 @@ function bump() {
   }
 }
 
+// Тап-рипл: волна от места касания
+countDisplay.addEventListener("pointerdown", function (event) {
+  const rect = countDisplay.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height) * 1.6;
+  const x = event.clientX ? event.clientX - rect.left : rect.width / 2;
+  const y = event.clientY ? event.clientY - rect.top : rect.height / 2;
+
+  const ripple = document.createElement("span");
+  ripple.className = "ripple";
+  ripple.style.width = size + "px";
+  ripple.style.height = size + "px";
+  ripple.style.left = (x - size / 2) + "px";
+  ripple.style.top = (y - size / 2) + "px";
+
+  countDisplay.appendChild(ripple);
+  setTimeout(function () {
+    ripple.remove();
+  }, 650);
+});
+
 function increment() {
+  if (justSwiped) return;
+
   const dhikr = currentDhikr();
   let progress = loadNumber(dhikr.key, 0);
 
@@ -1042,15 +1169,26 @@ function increment() {
     if ("vibrate" in navigator) {
       navigator.vibrate([60, 40, 60]);
     }
-    countDisplay.style.color = "var(--gold)";
+    flashGold();
     setTimeout(function () {
-      countDisplay.style.color = "";
       classicPos = (classicPos + 1) % classicOrder.length;
       renderCounter();
     }, 900);
-  } else {
     renderCounter();
+    return;
   }
+
+  if (mode === "free") {
+    const goal = freeGoals[freeGoalIndex];
+    if (goal > 0 && progress === goal) {
+      if ("vibrate" in navigator) {
+        navigator.vibrate([60, 40, 60]);
+      }
+      flashGold();
+    }
+  }
+
+  renderCounter();
 }
 
 countDisplay.addEventListener("click", increment);
@@ -1061,6 +1199,42 @@ countDisplay.addEventListener("keydown", function (event) {
     increment();
   }
 });
+
+// Свайп по цифре: смена зикра
+let touchStartX = 0;
+let touchStartY = 0;
+let justSwiped = false;
+
+countDisplay.addEventListener("touchstart", function (event) {
+  touchStartX = event.touches[0].clientX;
+  touchStartY = event.touches[0].clientY;
+}, { passive: true });
+
+countDisplay.addEventListener("touchend", function (event) {
+  const dx = event.changedTouches[0].clientX - touchStartX;
+  const dy = event.changedTouches[0].clientY - touchStartY;
+
+  if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+    justSwiped = true;
+    setTimeout(function () {
+      justSwiped = false;
+    }, 400);
+
+    const forward = dx < 0;
+
+    if (mode === "free") {
+      freeIndex = forward
+        ? (freeIndex + 1) % tasbihList.length
+        : (freeIndex - 1 + tasbihList.length) % tasbihList.length;
+    } else {
+      classicPos = forward
+        ? (classicPos + 1) % classicOrder.length
+        : (classicPos - 1 + classicOrder.length) % classicOrder.length;
+    }
+
+    renderCounter();
+  }
+}, { passive: true });
 
 resetButton.addEventListener("click", function () {
   const dhikr = currentDhikr();
@@ -1095,6 +1269,12 @@ modeClassicBtn.addEventListener("click", function () {
 
 modeFreeBtn.addEventListener("click", function () {
   mode = "free";
+  renderCounter();
+});
+
+freeGoal.addEventListener("click", function () {
+  freeGoalIndex = (freeGoalIndex + 1) % freeGoals.length;
+  saveNumber("freeGoalIndex", freeGoalIndex);
   renderCounter();
 });
 
