@@ -882,6 +882,36 @@ footer {
   color: var(--green);
 }
 
+/* ===== Хадис дня ===== */
+.hadith-day {
+  margin: 0 0 24px;
+  padding: 22px 20px;
+  background: #fbfcf8;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--gold);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  animation: nurFadeIn 0.7s ease 0.1s both;
+}
+
+.hadith-day .hadith-text {
+  margin: 0 0 8px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.hadith-day .hadith-source {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.hadith-day small {
+  display: block;
+  margin-top: 10px;
+  color: var(--muted);
+}
 
   
 </style>
@@ -904,6 +934,8 @@ footer {
       <h2 id="greeting">Ассаляму алейкум!</h2>
       <p id="greetingText">Пусть день будет наполнен благом.</p>
     </section>
+    
+    <section class="hadith-day" id="hadithDay" aria-label="Хадис дня"></section>
 
 
     <section class="name-day" id="nameDay" aria-label="Имя Аллаха дня"></section>
@@ -1041,6 +1073,67 @@ function updateGreeting() {
 
 updateGreeting();
 setInterval(updateGreeting, 60 * 60 * 1000);
+
+  // ===== Хадис дня =====
+const hadithsOfDay = [
+  { text: "Дела оцениваются по намерениям.", source: "Бухари 1, Муслим 1907" },
+  { text: "Не злится — и не будет гнева.", source: "Бухари 6116" },
+  { text: "Верующим свойственно любить друг друга.", source: "Муслим 2541" },
+  { text: "Правдивость ведёт к праведности, а праведность ведёт к Раю.", source: "Бухари 6094" },
+  { text: "Кто не благодарит людей — не благодарит и Аллаха.", source: "Абу Давуд 4811, ат-Тирмизи 1955" },
+  { text: "Улыбка на лице брата тебе — милостыня.", source: "ат-Тирмизи 1956" },
+  { text: "Лучший из вас тот, кто лучше всех относится к своей семье.", source: "ат-Тирмизи 3895" },
+  { text: "Довольство — неисчерпаемое богатство.", source: "аль-Бухари в аль-Адаб аль-муфрад 229" },
+  { text: "Даруй людям приветствие, корми еду и молись ночью, пока люди спят, — и войдёшь в Рай с миром.", source: "ат-Тирмизи 2485" },
+  { text: "Кто уверовал в Аллаха и Последний день — пусть говорит доброе или молчит.", source: "Бухари 6018" },
+  { text: "Не смотри на то, что у других выше тебя, а смотри на тех, кто ниже тебя.", source: "Бухари 6490" },
+  { text: "Отвергай то, что смущает тебя, и держись того, что не смущает душу.", source: "ан-Насаи 4185, Ахмад" },
+  { text: "Молчание — спасение.", source: "ат-Тирмизи 2512" },
+  { text: "Не завидуй друг другу, не враждуй и не отворачивайся друг от друга.", source: "Муслим 2564" },
+  { text: "Верующий — тот, с кем люди чувствуют себя в безопасности.", source: "ат-Тирмизи 2515" },
+  { text: "Кто скрывает чужой недостаток, тому Аллах скроет его недостатки.", source: "Муслим 2699" },
+  { text: "Крепкий верующий лучше и любимее слабого верующего, но в каждом есть добро.", source: "Муслим 2664" },
+  { text: "Слова «легко» не говори — говори «Аллах поможет».", source: "Ибн Маджа 2175" },
+  { text: "Милостыня не уменьшает имущество.", source: "Муслим 2588" },
+  { text: "Терпение — свет.", source: "Муслим 223" },
+  { text: "Кто посещает больного или идёт за пользой к брату своему — голос призывает его: иди ко благу.", source: "ат-Тирмизи 1968" },
+  { text: "Не пей стоя, если можешь сесть.", source: "Муслим 2026" },
+  { text: "Право пути: удаляй помехи с дороги.", source: "Бухари 3008" },
+  { text: "Улыбка — это саданэ (милостыня) языка.", source: "ат-Тирмизи 1956 (иная формулировка)" },
+  { text: "Кто отвечает на зло добром — тот лишит врага его силы.", source: "Абу Давуд 4992" },
+  { text: "Чистота — половина веры.", source: "Муслим 223" },
+  { text: "Не поднимайте с земли споры, пока не разойдётесь с миром.", source: "Бухари 6257" },
+  { text: "Суди справедливо — и тебе полюбится это.", source: "ат-Тирмизи 1371" },
+  { text: "Кто ведёт по благу — тому такая же награда, как и ведущему.", source: "Муслим 1893" },
+  { text: "Стыд — от веры.", source: "Бухари 9, Муслим 35" }
+];
+
+function renderHadithOfDay() {
+  const block = document.getElementById("hadithDay");
+  if (!block) return;
+
+  const now = new Date();
+  const startOfYear = new Date(now.getFullYear(), 0, 0);
+  const dayOfYear = Math.floor((now - startOfYear) / 86400000);
+  const hadith = hadithsOfDay[dayOfYear % hadithsOfDay.length];
+
+  block.replaceChildren();
+
+  const title = document.createElement("small");
+  title.textContent = "Хадис дня";
+
+  const text = document.createElement("p");
+  text.className = "hadith-text";
+  text.textContent = hadith.text;
+
+  const source = document.createElement("p");
+  source.className = "hadith-source";
+  source.textContent = "— " + hadith.source;
+
+  block.append(title, text, source);
+}
+
+renderHadithOfDay();
 
 
 // ===== Тасбих: два режима =====
